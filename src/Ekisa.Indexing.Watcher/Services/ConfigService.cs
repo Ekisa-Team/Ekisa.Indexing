@@ -1,7 +1,8 @@
 ﻿using Ekisa.Indexing.Watcher.Constants;
+using Ekisa.Indexing.Watcher.Enums;
 using Ekisa.Indexing.Watcher.Models;
+using Ekisa.Indexing.Watcher.Utils;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Ekisa.Indexing.Watcher.Services
 {
@@ -78,10 +79,10 @@ namespace Ekisa.Indexing.Watcher.Services
                     throw new Exception("Kind argument must be provided.");
                 }
 
-                List<string> supportedTriggerEvents = new() { "CREATE" };
+                var supportedTriggerEvents = EnumUtils.EnumNamedValues<TriggerEventKind>();
                 if (!supportedTriggerEvents.Contains(@event.Kind))
                 {
-                    throw new Exception($"The provided trigger event is not yet supported. Supported trigger events: 'CREATE'");
+                    throw new Exception($"The provided trigger event is not yet supported. Supported trigger events: 'Create'");
                 }
 
                 // Validates webhook URL
@@ -96,10 +97,10 @@ namespace Ekisa.Indexing.Watcher.Services
                     throw new Exception("HTTP method argument must be provided.");
                 }
 
-                List<string> availableHttpMethods = new() { "POST", "PUT", "PATCH", "DELETE" };
-                if (!availableHttpMethods.Contains(@event.WebhookHttpMethod ?? ""))
+                List<string> supportedHttpMethods = EnumUtils.EnumNamedValues<WebhookHttpMethod>();
+                if (!supportedHttpMethods.Contains(@event.WebhookHttpMethod ?? ""))
                 {
-                    throw new Exception("The provided HTTP method is invalid.");
+                    throw new Exception("The provided HTTP method is not yet supported. Supported HTTP methods: 'Get', 'Post', 'Put', 'Patch' and 'Delete'");
                 }
             }
         }

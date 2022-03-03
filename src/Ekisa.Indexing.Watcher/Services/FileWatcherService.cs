@@ -1,8 +1,9 @@
-﻿using System.Reactive.Linq;
+﻿using Ekisa.Indexing.Watcher.Enums;
+using System.Reactive.Linq;
 
 namespace Ekisa.Indexing.Watcher.Utils
 {
-    public delegate void Notify(string fullPath);
+    public delegate void Notify(string fullPath, TriggerEventKind triggerEventKind);
 
     public class FileWatcherService
     {
@@ -29,7 +30,7 @@ namespace Ekisa.Indexing.Watcher.Utils
 
             Observable.FromEventPattern<FileSystemEventArgs>(watcher, "Changed")
                 .Distinct(e => e.EventArgs.FullPath)
-                .Subscribe(e => DirectoryChanged?.Invoke(e.EventArgs.FullPath));
+                .Subscribe(e => DirectoryChanged?.Invoke(e.EventArgs.FullPath, TriggerEventKind.Create));
         }      
     }
 }
