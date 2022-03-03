@@ -6,7 +6,7 @@ using Ekisa.Indexing.Watcher.Services;
 try
 {
     ConfigService configService = new();
-    ConfigModel? config = await configService.ReadConfigFile(ConfigConstants.CONFIG_FILE_LOCATION);
+    Config? config = await configService.ReadConfigFile(ConfigConstants.CONFIG_FILE_LOCATION);
     OrchestratorService orchestrator = new(config!);
     orchestrator.Start();
     Console.ReadLine();

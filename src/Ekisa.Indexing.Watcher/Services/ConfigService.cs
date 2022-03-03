@@ -32,13 +32,13 @@ namespace Ekisa.Indexing.Watcher.Services
         #endregion
 
         #region Public Methods
-        public async Task<ConfigModel?> ReadConfigFile(string configFilePath)
+        public async Task<Config?> ReadConfigFile(string configFilePath)
         {
-            ConfigModel? config;
+            Config? config;
 
             try
             {
-                config = JsonConvert.DeserializeObject<ConfigModel>(await File.ReadAllTextAsync(configFilePath));
+                config = JsonConvert.DeserializeObject<Config>(await File.ReadAllTextAsync(configFilePath));
                 CheckConfigConstraints(config!);
             }
             catch 
@@ -51,7 +51,7 @@ namespace Ekisa.Indexing.Watcher.Services
         #endregion
 
         #region Private Methods
-        private void CheckConfigConstraints(ConfigModel config)
+        private void CheckConfigConstraints(Config config)
         {
             // Validates if provided folder is supported
             if (config.Folder == null)
@@ -64,34 +64,43 @@ namespace Ekisa.Indexing.Watcher.Services
                 throw new Exception("The provided folder is not yet supported.");
             }
 
-            // Validates webhook URL
-            if (config.WebhookUrl == null)
-            {
-                throw new Exception("Webhook URL argument must be provided.");
-            }
-
-            // Validates if provided HTTP method is supported
-            if (config.WebhookHttpMethod == null)
-            {
-                throw new Exception("HTTP method argument must be provided.");
-            }
-
-            List<string> availableHttpMethods = new() { "POST", "PUT", "PATCH", "DELETE" };
-            if (!availableHttpMethods.Contains(config.WebhookHttpMethod ?? ""))
-            {
-                throw new Exception("The provided HTTP method is invalid.");
-            }
-
-            // Validates if provided trigger event is supported
+            // Validates trigger events
             if (config.TriggerEvents == null)
             {
                 throw new Exception("Trigger events argument must be provided.");
             }
 
-            List<string> availableTriggerEvents = new() { "add", "update", "delete" };
-            if (config.TriggerEvents.ToList().Any(e => !availableTriggerEvents.Contains(e)))
+            foreach (ConfigTriggerEvent @event in config.TriggerEvents)
             {
-                throw new Exception($"The provided trigger event is not yet supported.");
+                // Validates event kind
+                if (@event.Kind == null)
+                {
+                    throw new Exception("Kind argument must be provided.");
+                }
+
+                List<string> supportedTriggerEvents = new() { "CREATE" };
+                if (!supportedTriggerEvents.Contains(@event.Kind))
+                {
+                    throw new Exception($"The provided trigger event is not yet supported. Supported trigger events: 'CREATE'");
+                }
+
+                // Validates webhook URL
+                if (@event.WebhookUrl == null)
+                {
+                    throw new Exception("Webhook URL argument must be provided.");
+                }
+
+                // Validates if provided HTTP method is supported
+                if (@event.WebhookHttpMethod == null)
+                {
+                    throw new Exception("HTTP method argument must be provided.");
+                }
+
+                List<string> availableHttpMethods = new() { "POST", "PUT", "PATCH", "DELETE" };
+                if (!availableHttpMethods.Contains(@event.WebhookHttpMethod ?? ""))
+                {
+                    throw new Exception("The provided HTTP method is invalid.");
+                }
             }
         }
         #endregion

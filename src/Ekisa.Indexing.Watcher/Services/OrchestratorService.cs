@@ -7,10 +7,10 @@ namespace Ekisa.Indexing.Watcher.Core
 {
     public class OrchestratorService
     {
-        private readonly ConfigModel _config;
+        private readonly Config _config;
         private readonly ConfigService _configService;
         
-        public OrchestratorService(ConfigModel config)
+        public OrchestratorService(Config config)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _configService = new ConfigService();
