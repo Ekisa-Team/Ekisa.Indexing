@@ -31,5 +31,8 @@ namespace Ekisa.Indexing.Watcher.Models
 
         [JsonProperty("webhook_request_body")]
         public JObject? WebhookRequestBody { get; set; }
+
+        [JsonProperty("should_include_file")]
+        public bool ShouldIncludeFile { get; set; } = false;
     }
 }
