@@ -1,28 +1,35 @@
-﻿using Ekisa.Indexing.Watcher.Utils;
+﻿using Ekisa.Indexing.Watcher.Models;
+using Ekisa.Indexing.Watcher.Services;
+using Ekisa.Indexing.Watcher.Utils;
 using Syroot.Windows.IO;
 
 namespace Ekisa.Indexing.Watcher.Core
 {
     public class OrchestratorService
     {
-        private readonly string? _additionalPath;
-
-
-        public OrchestratorService()
-        {
-        }
+        private readonly ConfigModel _config;
+        private readonly ConfigService _configService;
         
-        public OrchestratorService(string additionalPath)
+        public OrchestratorService(ConfigModel config)
         {
-            _additionalPath = additionalPath;
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+            _configService = new ConfigService();
         }
 
         public void Start()
         {
-            string listenPath = Path.Combine(KnownFolders.Downloads.Path, string.IsNullOrWhiteSpace(_additionalPath) ? "" : $"{_additionalPath}");
-            FileWatcher fw = new(listenPath);
+            _configService.Locations.TryGetValue(_config.Folder!, out string? folderFullPath);
+            string listeningPath = folderFullPath!;
+
+            if (_config.PathSuffix != null)
+            {
+                listeningPath = Path.Combine(listeningPath, string.Join(@"\", _config.PathSuffix.Select(p => p)));
+            }
+
+            FileWatcherService fw = new(listeningPath);
             fw.DirectoryChanged += HandleDirectoryChanged;
             fw.Watch();
+            Console.WriteLine($"Listening for file changes on {listeningPath}");
         }
 
         private void HandleDirectoryChanged(string fullPath)

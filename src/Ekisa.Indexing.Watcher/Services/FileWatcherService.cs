@@ -4,7 +4,7 @@ namespace Ekisa.Indexing.Watcher.Utils
 {
     public delegate void Notify(string fullPath);
 
-    public class FileWatcher
+    public class FileWatcherService
     {
         public event Notify? DirectoryChanged;
 
@@ -12,7 +12,7 @@ namespace Ekisa.Indexing.Watcher.Utils
 
         private readonly string _path;
 
-        public FileWatcher(string path)
+        public FileWatcherService(string path)
         {
             _path = path;            
         }
