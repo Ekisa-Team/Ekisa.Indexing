@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Ekisa.Indexing.Watcher": {
+      "commandName": "Project",
+      "commandLineArgs": ""
+    }
+  }
+}

@@ -3,16 +3,16 @@ using Syroot.Windows.IO;
 
 namespace Ekisa.Indexing.Watcher.Core
 {
-    public class Orchestrator
+    public class OrchestratorService
     {
         private readonly string? _additionalPath;
 
 
-        public Orchestrator()
+        public OrchestratorService()
         {
         }
         
-        public Orchestrator(string additionalPath)
+        public OrchestratorService(string additionalPath)
         {
             _additionalPath = additionalPath;
         }
