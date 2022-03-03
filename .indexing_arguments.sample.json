@@ -1,0 +1,18 @@
+{
+  "folder": "Downloads",
+  "path_suffix": ["indexing"],
+  "@trigger_events": [
+    {
+      "kind": "Create",
+      "webhook_url": "https://jsonplaceholder.typicode.com/todos/1",
+      "webhook_http_method": "Get",
+      "webhook_http_headers": {
+        "SomeHeader": true
+      },
+      "webhook_http_body": {
+        "SomeParameter": true
+      },
+      "should_include_file": false
+    }
+  ]
+}
